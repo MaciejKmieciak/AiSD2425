@@ -25,7 +25,7 @@ using namespace std;
 const int n_limit = 10000;
 int n = 2;
 int low = -2, high = 2;
-const bool display_array = false;
+const bool display_array = true;
 
 unsigned long long comparison_counter;
 unsigned long long assignment_counter;
@@ -232,31 +232,38 @@ int* ins_sort_mod(const int* unsorted) {
 
         int j = i - 1;
         int k = i;
-        assignment_counter += 2;
+        assignment_counter += 1;
 
         
-        while (j >= 0 && k >= 0 && A[j] > x) {
-            ++comparison_counter; // A[j] > x
-
-            A[j + 1] = A[j];
-            --j;
-            assignment_counter += 2;
+        while (j >= 0) {
 
             ++comparison_counter;
-            if (A[k] > y) {
-                A[k + 1] = A[k];
+            if (A[j] > y) {
+                A[k + 1] = A[j];
+                --j;
                 --k;
+                assignment_counter += 3;
+                continue;
+            }
+            
+            ++comparison_counter;
+            if (A[j] > x) {
+                A[j + 1] = A[j];
+                --j;
                 assignment_counter += 2;
             }
+
+            else {
+                break;
+            }
         }
-        ++comparison_counter; // Ostatnie porównanie z while, które dało fałsz
 
         A[j + 1] = x;
         A[k + 1] = y;
         assignment_counter += 2;
     }
 
-    // Jeśli n jest parzyste, został ostani, pojedynczy element
+    // Jeśli n jest parzyste, został ostatni, pojedynczy element
     // Wstawiamy go, jak w zwykłym INSERTION
     if (n % 2 == 0) {
         int x = A[n - 1];
